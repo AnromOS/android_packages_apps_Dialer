@@ -146,6 +146,8 @@ public class CallRecorderService extends Service {
         try {
             int audioSource = getAudioSource();
             int formatChoice = getAudioFormatChoice();
+            Log.d(TAG, "jin Creating media recorder with audio source " + audioSource
+                    + "  formatChoice " + formatChoice);
             if (DBG) Log.d(TAG, "Creating media recorder with audio source " + audioSource);
             mMediaRecorder.setAudioSource(audioSource);
             mMediaRecorder.setOutputFormat(formatChoice == 0
@@ -160,6 +162,7 @@ public class CallRecorderService extends Service {
         file.getParentFile().mkdirs();
         String outputPath = file.getAbsolutePath();
         if (DBG) Log.d(TAG, "Writing output to file " + outputPath);
+        Log.d(TAG, "jin Writing output to file " + outputPath);
 
         try {
             mMediaRecorder.setOutputFile(outputPath);
