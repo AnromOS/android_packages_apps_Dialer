@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.android.services.romcallrecorder.common.CallRecording;
+import com.android.services.romcallrecorder.common.RomCallRecording;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +36,8 @@ import java.util.List;
  * read/write operations
  * close()
  */
-public class CallRecordingDataStore {
-    private static final String TAG = "CallRecordingStore";
+public class RomCallRecordingDataStore {
+    private static final String TAG = "RomCallRecordingStore";
     private SQLiteOpenHelper mOpenHelper = null;
     private SQLiteDatabase mDatabase = null;
 
@@ -46,7 +46,7 @@ public class CallRecordingDataStore {
      */
     public void open(Context context) {
         if (mDatabase == null) {
-            mOpenHelper = new CallRecordingSQLiteOpenHelper(context);
+            mOpenHelper = new RomCallRecordingSQLiteOpenHelper(context);
             mDatabase = mOpenHelper.getWritableDatabase();
         }
     }
@@ -70,13 +70,13 @@ public class CallRecordingDataStore {
      *
      * @param recording the recording to store
      */
-    public void putRecording(CallRecording recording) {
+    public void putRecording(RomCallRecording recording) {
         final String insertSql = "INSERT INTO " +
-                CallRecordingsContract.CallRecording.TABLE_NAME + " (" +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_PHONE_NUMBER + ", " +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_CALL_DATE + ", " +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_RECORDING_FILENAME + ", " +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_CREATION_DATE + ") " +
+                RomCallRecordingsContract.RomCallRecording.TABLE_NAME + " (" +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_PHONE_NUMBER + ", " +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CALL_DATE + ", " +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_RECORDING_FILENAME + ", " +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CREATION_DATE + ") " +
                 " VALUES (?, ?, ?, ?)";
 
         try {
@@ -100,16 +100,16 @@ public class CallRecordingDataStore {
      * @param callCreationDate time that the call was created
      * @return list of recordings
      */
-    public List<CallRecording> getRecordings(String phoneNumber, long callCreationDate) {
-        List<CallRecording> resultList = new ArrayList<CallRecording>();
+    public List<RomCallRecording> getRecordings(String phoneNumber, long callCreationDate) {
+        List<RomCallRecording> resultList = new ArrayList<RomCallRecording>();
 
         final String query = "SELECT " +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_RECORDING_FILENAME + "," +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_CREATION_DATE +
-                " FROM " + CallRecordingsContract.CallRecording.TABLE_NAME +
-                " WHERE " + CallRecordingsContract.CallRecording.COLUMN_NAME_PHONE_NUMBER + " = ?" +
-                " AND " + CallRecordingsContract.CallRecording.COLUMN_NAME_CALL_DATE + " = ?" +
-                " ORDER BY " + CallRecordingsContract.CallRecording.COLUMN_NAME_CREATION_DATE;
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_RECORDING_FILENAME + "," +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CREATION_DATE +
+                " FROM " + RomCallRecordingsContract.RomCallRecording.TABLE_NAME +
+                " WHERE " + RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_PHONE_NUMBER + " = ?" +
+                " AND " + RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CALL_DATE + " = ?" +
+                " ORDER BY " + RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CREATION_DATE;
 
         String args[] = {
             phoneNumber, String.valueOf(callCreationDate)
@@ -120,8 +120,8 @@ public class CallRecordingDataStore {
             while (cursor.moveToNext()) {
                 String fileName = cursor.getString(0);
                 long creationDate = cursor.getLong(1);
-                CallRecording recording =
-                        new CallRecording(phoneNumber, callCreationDate, fileName, creationDate);
+                RomCallRecording recording =
+                        new RomCallRecording(phoneNumber, callCreationDate, fileName, creationDate);
                 if (recording.getFile().exists()) {
                     resultList.add(recording);
                 }
@@ -135,8 +135,8 @@ public class CallRecordingDataStore {
         return resultList;
     }
 
-    static class CallRecordingsContract {
-        static interface CallRecording extends BaseColumns {
+    static class RomCallRecordingsContract {
+        static interface RomCallRecording extends BaseColumns {
             static final String TABLE_NAME = "call_recordings";
             static final String COLUMN_NAME_PHONE_NUMBER = "phone_number";
             static final String COLUMN_NAME_CALL_DATE = "call_date";
@@ -145,29 +145,29 @@ public class CallRecordingDataStore {
         }
     }
 
-    static class CallRecordingSQLiteOpenHelper extends SQLiteOpenHelper {
+    static class RomCallRecordingSQLiteOpenHelper extends SQLiteOpenHelper {
         private static final int VERSION = 1;
-        private static final String DB_NAME = "callrecordings.db";
+        private static final String DB_NAME = "romcallrecordings.db";
 
-        public CallRecordingSQLiteOpenHelper(Context context) {
+        public RomCallRecordingSQLiteOpenHelper(Context context) {
             super(context, DB_NAME, null, VERSION);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + CallRecordingsContract.CallRecording.TABLE_NAME + " (" +
-                CallRecordingsContract.CallRecording._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_PHONE_NUMBER + " TEXT," +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_CALL_DATE + " LONG," +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_RECORDING_FILENAME + " TEXT, " +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_CREATION_DATE + " LONG" +
+            db.execSQL("CREATE TABLE " + RomCallRecordingsContract.RomCallRecording.TABLE_NAME + " (" +
+                RomCallRecordingsContract.RomCallRecording._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_PHONE_NUMBER + " TEXT," +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CALL_DATE + " LONG," +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_RECORDING_FILENAME + " TEXT, " +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CREATION_DATE + " LONG" +
                 ");"
             );
 
             db.execSQL("CREATE INDEX IF NOT EXISTS phone_number_call_date_index ON " +
-                CallRecordingsContract.CallRecording.TABLE_NAME + " (" +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_PHONE_NUMBER + ", " +
-                CallRecordingsContract.CallRecording.COLUMN_NAME_CALL_DATE + ");"
+                RomCallRecordingsContract.RomCallRecording.TABLE_NAME + " (" +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_PHONE_NUMBER + ", " +
+                RomCallRecordingsContract.RomCallRecording.COLUMN_NAME_CALL_DATE + ");"
             );
         }
 

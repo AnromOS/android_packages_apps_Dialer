@@ -22,26 +22,26 @@ import android.os.Parcelable;
 
 import java.io.File;
 
-public final class CallRecording implements Parcelable {
+public final class RomCallRecording implements Parcelable {
     public String phoneNumber;
     public long creationTime;
     public String fileName;
     public long startRecordingTime;
 
-    private static final String PUBLIC_DIRECTORY_NAME = "CallRecordings";
+    private static final String PUBLIC_DIRECTORY_NAME = "RomCallRecordings";
 
-    public static final Parcelable.Creator<CallRecording> CREATOR = new
-            Parcelable.Creator<CallRecording>() {
-                public CallRecording createFromParcel(Parcel in) {
-                    return new CallRecording(in);
+    public static final Parcelable.Creator<RomCallRecording> CREATOR = new
+            Parcelable.Creator<RomCallRecording>() {
+                public RomCallRecording createFromParcel(Parcel in) {
+                    return new RomCallRecording(in);
                 }
 
-                public CallRecording[] newArray(int size) {
-                    return new CallRecording[size];
+                public RomCallRecording[] newArray(int size) {
+                    return new RomCallRecording[size];
                 }
             };
 
-    public CallRecording(String phoneNumber, long creationTime,
+    public RomCallRecording(String phoneNumber, long creationTime,
             String fileName, long startRecordingTime) {
         this.phoneNumber = phoneNumber;
         this.creationTime = creationTime;
@@ -49,7 +49,7 @@ public final class CallRecording implements Parcelable {
         this.startRecordingTime = startRecordingTime;
     }
 
-    public CallRecording(Parcel in) {
+    public RomCallRecording(Parcel in) {
         phoneNumber = in.readString();
         creationTime = in.readLong();
         fileName = in.readString();

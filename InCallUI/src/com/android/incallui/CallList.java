@@ -102,11 +102,11 @@ public class CallList {
 
         if (call.getState() == Call.State.INCOMING ||
                 call.getState() == Call.State.CALL_WAITING) {
-            Log.i(this, "jin Dialer CallList.java onCallAdded "
+            Log.i(this, "jin Dialer CallList.java onCallAdded " +
                 "calling onIncoming");
             onIncoming(call, call.getCannedSmsResponses());
         } else {
-            Log.i(this, "jin Dialer CallList.java onCallAdded "
+            Log.i(this, "jin Dialer CallList.java onCallAdded " +
                 "callilng onUpdate");
             onUpdate(call);
         }
@@ -190,7 +190,7 @@ public class CallList {
                 setActiveSubId(sub);
             }
         }
-        Log.i(this, "jin Dialer CallList.java onUpdate "
+        Log.i(this, "jin Dialer CallList.java onUpdate " +
             "calling onUpdateCall");
         onUpdateCall(call);
         notifyGenericListeners();

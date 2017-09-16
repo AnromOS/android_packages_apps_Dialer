@@ -30,8 +30,8 @@ import android.text.TextUtils;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.android.services.romcallrecorder.common.CallRecording;
-import com.android.services.romcallrecorder.common.ICallRecorderService;
+import com.android.services.romcallrecorder.common.RomCallRecording;
+import com.android.services.romcallrecorder.common.IRomCallRecorderService;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +40,8 @@ import java.util.Date;
 
 import com.android.dialer.R;
 
-public class CallRecorderService extends Service {
-    private static final String TAG = "CallRecorderService";
+public class RomCallRecorderService extends Service {
+    private static final String TAG = "RomCallRecorderService";
     private static final boolean DBG = false;
 
     private static enum RecorderState {
@@ -51,15 +51,15 @@ public class CallRecorderService extends Service {
 
     private MediaRecorder mMediaRecorder = null;
     private RecorderState mState = RecorderState.IDLE;
-    private CallRecording mCurrentRecording = null;
+    private RomCallRecording mCurrentRecording = null;
 
     private static final String AUDIO_SOURCE_PROPERTY = "persist.call_recording.src";
 
     private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyMMdd_HHmmssSSS");
 
-    private final ICallRecorderService.Stub mBinder = new ICallRecorderService.Stub() {
+    private final IRomCallRecorderService.Stub mBinder = new IRomCallRecorderService.Stub() {
         @Override
-        public CallRecording stopRecording() {
+        public RomCallRecording stopRecording() {
             if (getState() == RecorderState.RECORDING) {
                 stopRecordingInternal();
                 return mCurrentRecording;
@@ -71,7 +71,7 @@ public class CallRecorderService extends Service {
         public boolean startRecording(String phoneNumber, long creationTime)
                 throws RemoteException {
             String fileName = generateFilename(phoneNumber);
-            mCurrentRecording = new CallRecording(phoneNumber, creationTime,
+            mCurrentRecording = new RomCallRecording(phoneNumber, creationTime,
                     fileName, System.currentTimeMillis());
             return startRecordingInternal(mCurrentRecording.getFile());
 
@@ -83,14 +83,14 @@ public class CallRecorderService extends Service {
         }
 
         @Override
-        public CallRecording getActiveRecording() throws RemoteException {
+        public RomCallRecording getActiveRecording() throws RemoteException {
             return mCurrentRecording;
         }
     };
 
     @Override
     public void onCreate() {
-        if (DBG) Log.d(TAG, "Creating CallRecorderService");
+        if (DBG) Log.d(TAG, "Creating RomCallRecorderService");
     }
 
     @Override
@@ -216,7 +216,7 @@ public class CallRecorderService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (DBG) Log.d(TAG, "Destroying CallRecorderService");
+        if (DBG) Log.d(TAG, "Destroying RomCallRecorderService");
     }
 
     private synchronized RecorderState getState() {

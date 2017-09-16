@@ -1,12 +1,12 @@
 package com.android.services.romcallrecorder.common;
 
-import com.android.services.romcallrecorder.common.CallRecording;
+import com.android.services.romcallrecorder.common.RomCallRecording;
 
 /**
  * Service for recording phone calls.  Only one recording may be active at a time
  * (i.e. every call to startRecording should be followed by a call to stopRecording).
  */
-interface ICallRecorderService {
+interface IRomCallRecorderService {
 
     /**
      * Start a recording.
@@ -20,7 +20,7 @@ interface ICallRecorderService {
      *
      * @return call recording data including the output filename
      */
-    CallRecording stopRecording();
+    RomCallRecording stopRecording();
 
     /**
      * Recording status
@@ -34,6 +34,6 @@ interface ICallRecorderService {
      *
      * @return call recording object
      */
-    CallRecording getActiveRecording();
+    RomCallRecording getActiveRecording();
 
 }
