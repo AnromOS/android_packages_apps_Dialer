@@ -102,8 +102,12 @@ public class CallList {
 
         if (call.getState() == Call.State.INCOMING ||
                 call.getState() == Call.State.CALL_WAITING) {
+            Log.i(this, "jin Dialer CallList.java onCallAdded "
+                "calling onIncoming");
             onIncoming(call, call.getCannedSmsResponses());
         } else {
+            Log.i(this, "jin Dialer CallList.java onCallAdded "
+                "callilng onUpdate");
             onUpdate(call);
         }
 
@@ -140,12 +144,14 @@ public class CallList {
      */
     public void onIncoming(Call call, List<String> textMessages) {
         Log.d(this, "onIncoming - " + call);
+        Log.i(this, "jin onIncoming 1 - " + call);
 
         // Update active subscription from call object. it will be set by
         // Telecomm service for incoming call and whenever active sub changes.
         if (call.mIsActiveSub) {
             int sub = call.getSubId();
             Log.d(this, "onIncoming - sub:" + sub + " mSubId:" + mSubId);
+            Log.i(this, "jin onIncoming 2 - sub:" + sub + " mSubId:" + mSubId);
             if (sub != mSubId) {
                 setActiveSubId(sub);
             }
@@ -153,6 +159,7 @@ public class CallList {
 
         if (updateCallInMap(call)) {
             Log.i(this, "onIncoming - " + call);
+            Log.i(this, "jin onIncoming 3 - " + call);
         }
         updateCallTextMap(call, textMessages);
 
@@ -174,13 +181,17 @@ public class CallList {
         Trace.beginSection("onUpdate");
         PhoneAccountHandle ph = call.getAccountHandle();
         Log.d(this, "onUpdate - " + call  + " ph:" + ph);
+        Log.i(this, "jin onUpdate 1 - " + call  + " ph:" + ph);
         if (call.mIsActiveSub && ph != null) {
             int sub = call.getSubId(ph);
             Log.d(this, "onUpdate - sub:" + sub + " mSubId:" + mSubId);
+            Log.i(this, "jin onUpdate - sub:" + sub + " mSubId:" + mSubId);
             if(sub != mSubId) {
                 setActiveSubId(sub);
             }
         }
+        Log.i(this, "jin Dialer CallList.java onUpdate "
+            "calling onUpdateCall");
         onUpdateCall(call);
         notifyGenericListeners();
         Trace.endSection();
@@ -514,6 +525,7 @@ public class CallList {
         Log.d(this, "\t" + call);
         if (updateCallInMap(call)) {
             Log.i(this, "onUpdate - " + call);
+            Log.i(this, "jin onUpdate 2 - onUpdateCall" + call);
         }
         updateCallTextMap(call, call.getCannedSmsResponses());
         notifyCallUpdateListeners(call);
