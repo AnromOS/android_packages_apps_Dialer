@@ -79,6 +79,7 @@ public class RomCallRecorderService extends Service {
 
         @Override
         public boolean isRecording() throws RemoteException {
+            Log.i(TAG, "jin RomCallRecorderService.java isRecording");
             return getState() == RecorderState.RECORDING;
         }
 
@@ -91,10 +92,12 @@ public class RomCallRecorderService extends Service {
     @Override
     public void onCreate() {
         if (DBG) Log.d(TAG, "Creating RomCallRecorderService");
+        Log.i(TAG, "jin RomCallRecorderService Creating RomCallRecorderService");
     }
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(TAG, "jin RomCallRecorderService onBind");
         return mBinder;
     }
 
@@ -123,24 +126,28 @@ public class RomCallRecorderService extends Service {
 
     private synchronized boolean startRecordingInternal(File file) {
         if (mMediaRecorder != null) {
-            if (DBG) {
+           if (DBG) {
                 Log.d(TAG, "Start called with recording in progress, stopping  current recording");
             }
+            Log.i(TAG, "jin RomCallRecorderService.java Start called with recording in progress, stopping  current recording");
             stopRecordingInternal();
         }
 
         if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "Record audio permission not granted, can't record call");
+            Log.i(TAG, "jin RomCallRecorderService.java Record audio permission not granted, can't record call");
             return false;
         }
         if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "External storage permission not granted, can't save recorded call");
+            Log.w(TAG, "jin RomCallRecorderService.java External storage permission not granted, can't save recorded call");
             return false;
         }
 
         if (DBG) Log.d(TAG, "Starting recording");
+        Log.i(TAG, "jin RomCallRecorderService.java Starting recording");
 
         mMediaRecorder = new MediaRecorder();
         try {
@@ -171,16 +178,22 @@ public class RomCallRecorderService extends Service {
             mState = RecorderState.RECORDING;
             return true;
         } catch (IOException e) {
+            Log.w(TAG, "jin Could not start recording for file " + outputPath, e);
+            Log.w(TAG, "jin Deleting failed recording " + outputPath);
             Log.w(TAG, "Could not start recording for file " + outputPath, e);
             Log.w(TAG, "Deleting failed recording " + outputPath);
             file.delete();
         } catch (IllegalStateException e) {
+            Log.w(TAG, "jin Could not start recording for file " + outputPath, e);
+            Log.w(TAG, "jin Deleting failed recording " + outputPath);
             Log.w(TAG, "Could not start recording for file " + outputPath, e);
             Log.w(TAG, "Deleting failed recording " + outputPath);
             file.delete();
         } catch (RuntimeException e) {
             // only catch exceptions thrown by the MediaRecorder JNI code
             if (e.getMessage().indexOf("start failed") >= 0) {
+                Log.w(TAG, "jin Could not start recording for file " + outputPath, e);
+                Log.w(TAG, "jin Deleting failed recording " + outputPath);
                 Log.w(TAG, "Could not start recording for file " + outputPath, e);
                 Log.w(TAG, "Deleting failed recording " + outputPath);
                 file.delete();
@@ -198,6 +211,7 @@ public class RomCallRecorderService extends Service {
 
     private synchronized void stopRecordingInternal() {
         if (DBG) Log.d(TAG, "Stopping current recording");
+        Log.d(TAG, "jin Stopping current recording");
         if (mMediaRecorder != null) {
             try {
                 if (getState() == RecorderState.RECORDING) {

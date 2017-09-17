@@ -133,7 +133,10 @@ public class CallList {
 
     private void record(boolean startRecording, Call mCall) {
         Log.i(this, "jin CallList record new RomCallRecorder");
-        CallRecorder recorder = CallRecorder.getInstance();
+        RomCallRecorder recorder = RomCallRecorder.getInstance();
+        if (recorder == null) {
+            Log.i(this, "jin CallList RomCallRecorder.getInstance result is null");
+        }
         boolean isRecording = recorder.isRecording();
         if (startRecording) {
             if (!isRecording) {
@@ -154,16 +157,16 @@ public class CallList {
         Trace.beginSection("onCallAdded");
         final Call call = new Call(telecomCall);
         Log.d(this, "onCallAdded: callState=" + call.getState());
-        Log.i(this, "jin onCallAdded only: call=" + call);
+        //~ Log.i(this, "jin onCallAdded only: call=" + call);
 
         if (call.getState() == Call.State.INCOMING ||
                 call.getState() == Call.State.CALL_WAITING) {
-            Log.i(this, "jin Dialer CallList.java onCallAdded " +
-                "calling onIncoming");
+            //~ Log.i(this, "jin Dialer CallList.java onCallAdded " +
+                //~ "calling onIncoming");
             onIncoming(call, call.getCannedSmsResponses());
         } else {
-            Log.i(this, "jin Dialer CallList.java onCallAdded " +
-                "callilng onUpdate");
+            //~ Log.i(this, "jin Dialer CallList.java onCallAdded " +
+                //~ "callilng onUpdate");
             onUpdate(call);
         }
 
@@ -200,14 +203,14 @@ public class CallList {
      */
     public void onIncoming(Call call, List<String> textMessages) {
         Log.d(this, "onIncoming - " + call);
-        Log.i(this, "jin onIncoming 1 - " + call);
+        //~ Log.i(this, "jin onIncoming 1 - " + call);
 
         // Update active subscription from call object. it will be set by
         // Telecomm service for incoming call and whenever active sub changes.
         if (call.mIsActiveSub) {
             int sub = call.getSubId();
             Log.d(this, "onIncoming - sub:" + sub + " mSubId:" + mSubId);
-            Log.i(this, "jin onIncoming 2 - sub:" + sub + " mSubId:" + mSubId);
+            //~ Log.i(this, "jin onIncoming 2 - sub:" + sub + " mSubId:" + mSubId);
             if (sub != mSubId) {
                 setActiveSubId(sub);
             }
@@ -215,7 +218,7 @@ public class CallList {
 
         if (updateCallInMap(call)) {
             Log.i(this, "onIncoming - " + call);
-            Log.i(this, "jin onIncoming 3 - " + call);
+            //~ Log.i(this, "jin onIncoming 3 - " + call);
         }
         updateCallTextMap(call, textMessages);
 
@@ -242,13 +245,13 @@ public class CallList {
         if (call.mIsActiveSub && ph != null) {
             int sub = call.getSubId(ph);
             Log.d(this, "onUpdate - sub:" + sub + " mSubId:" + mSubId);
-            Log.i(this, "jin onUpdate - sub:" + sub + " mSubId:" + mSubId);
+            //~ Log.i(this, "jin onUpdate - sub:" + sub + " mSubId:" + mSubId);
             if(sub != mSubId) {
                 setActiveSubId(sub);
             }
         }
-        Log.i(this, "jin Dialer CallList.java onUpdate " +
-            "calling onUpdateCall");
+        //~ Log.i(this, "jin Dialer CallList.java onUpdate " +
+            //~ "calling onUpdateCall");
         onUpdateCall(call);
         notifyGenericListeners();
         Trace.endSection();
@@ -344,6 +347,7 @@ public class CallList {
 
         // Let the listener know about the active calls immediately.
         listener.onCallListChange(this);
+        Log.i(this, "jin CallList.java addListener");
     }
 
     public void removeListener(Listener listener) {
@@ -582,7 +586,7 @@ public class CallList {
         Log.d(this, "\t" + call);
         if (updateCallInMap(call)) {
             Log.i(this, "onUpdate - " + call);
-            Log.i(this, "jin onUpdate 2 - onUpdateCall" + call);
+            //~ Log.i(this, "jin onUpdate 2 - onUpdateCall" + call);
         }
         updateCallTextMap(call, call.getCannedSmsResponses());
         notifyCallUpdateListeners(call);

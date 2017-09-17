@@ -94,6 +94,7 @@ public class CallRecorder implements CallList.Listener {
 
     private void initialize() {
         if (isEnabled() && !mInitialized) {
+            Log.i(TAG, "jin CallRecorder initialize");
             Intent serviceIntent = new Intent(mContext, CallRecorderService.class);
             mContext.bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
             mInitialized = true;

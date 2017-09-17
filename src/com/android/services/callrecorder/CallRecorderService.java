@@ -91,10 +91,12 @@ public class CallRecorderService extends Service {
     @Override
     public void onCreate() {
         if (DBG) Log.d(TAG, "Creating CallRecorderService");
+        Log.i(TAG, "jin old CallRecorderService Creating CallRecorderService");
     }
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.i(TAG, "jin old CallRecorderService onBind");
         return mBinder;
     }
 

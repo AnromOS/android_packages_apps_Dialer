@@ -64,11 +64,13 @@ public class RomCallRecorder implements CallList.Listener {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "jin RomCallRecorder.java onServiceConnected, create mService");
             mService = IRomCallRecorderService.Stub.asInterface(service);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "jin RomCallRecorder.java onServiceDisconnected");
             mService = null;
         }
     };
@@ -85,10 +87,12 @@ public class RomCallRecorder implements CallList.Listener {
     }
 
     private RomCallRecorder() {
+        Log.i(TAG, "jin RomCallRecorder calling CallList addListener");
         CallList.getInstance().addListener(this);
     }
 
     public void setUp(Context context) {
+        Log.i(TAG, "jin RomCallRecorder setUp");
         mContext = context.getApplicationContext();
     }
 
@@ -136,10 +140,12 @@ public class RomCallRecorder implements CallList.Listener {
 
     public boolean isRecording() {
         if (mService == null) {
+            Log.i(TAG, "jin RomCallRecorder.java isRecording mService is null");
             return false;
         }
 
         try {
+            Log.i(TAG, "jin RomCallRecorder.java isRecording calling mService.isRecording");
             return mService.isRecording();
         } catch (RemoteException e) {
             Log.w(TAG, "Exception checking recording status", e);
