@@ -128,27 +128,31 @@ public class CallRecorderService extends Service {
             if (DBG) {
                 Log.d(TAG, "Start called with recording in progress, stopping  current recording");
             }
+            Log.i(TAG, "jin old CallRecorderService Start called with recording in progress, stopping  current recording");
             stopRecordingInternal();
         }
 
         if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "Record audio permission not granted, can't record call");
+            Log.i(TAG, "jin old Record audio permission not granted, can't record call");
             return false;
         }
         if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "External storage permission not granted, can't save recorded call");
+            Log.i(TAG, "jin old External storage permission not granted, can't save recorded call");
             return false;
         }
 
         if (DBG) Log.d(TAG, "Starting recording");
+        Log.i(TAG, "jin old Starting recording");
 
         mMediaRecorder = new MediaRecorder();
         try {
             int audioSource = getAudioSource();
             int formatChoice = getAudioFormatChoice();
-            Log.d(TAG, "jin Creating media recorder with audio source " + audioSource
+            Log.i(TAG, "jin Creating media recorder with audio source " + audioSource
                     + "  formatChoice " + formatChoice);
             if (DBG) Log.d(TAG, "Creating media recorder with audio source " + audioSource);
             mMediaRecorder.setAudioSource(audioSource);
@@ -164,27 +168,34 @@ public class CallRecorderService extends Service {
         file.getParentFile().mkdirs();
         String outputPath = file.getAbsolutePath();
         if (DBG) Log.d(TAG, "Writing output to file " + outputPath);
-        Log.d(TAG, "jin Writing output to file " + outputPath);
+        Log.i(TAG, "jin Writing output to file " + outputPath);
 
         try {
             mMediaRecorder.setOutputFile(outputPath);
             mMediaRecorder.prepare();
             mMediaRecorder.start();
+            Log.i(TAG, "jin old set mState RECORDING");
             mState = RecorderState.RECORDING;
             return true;
         } catch (IOException e) {
             Log.w(TAG, "Could not start recording for file " + outputPath, e);
             Log.w(TAG, "Deleting failed recording " + outputPath);
+            Log.i(TAG, "jin old Could not start recording for file " + outputPath, e);
+            Log.i(TAG, "jin old Deleting failed recording " + outputPath);
             file.delete();
         } catch (IllegalStateException e) {
             Log.w(TAG, "Could not start recording for file " + outputPath, e);
             Log.w(TAG, "Deleting failed recording " + outputPath);
+            Log.i(TAG, "jin old Could not start recording for file " + outputPath, e);
+            Log.i(TAG, "jin old Deleting failed recording " + outputPath);
             file.delete();
         } catch (RuntimeException e) {
             // only catch exceptions thrown by the MediaRecorder JNI code
             if (e.getMessage().indexOf("start failed") >= 0) {
                 Log.w(TAG, "Could not start recording for file " + outputPath, e);
                 Log.w(TAG, "Deleting failed recording " + outputPath);
+                Log.i(TAG, "jin old Could not start recording for file " + outputPath, e);
+                Log.i(TAG, "jin old Deleting failed recording " + outputPath);
                 file.delete();
             } else {
                 throw e;
@@ -200,6 +211,7 @@ public class CallRecorderService extends Service {
 
     private synchronized void stopRecordingInternal() {
         if (DBG) Log.d(TAG, "Stopping current recording");
+        Log.i(TAG, "jin old Stopping current recording");
         if (mMediaRecorder != null) {
             try {
                 if (getState() == RecorderState.RECORDING) {
@@ -214,6 +226,7 @@ public class CallRecorderService extends Service {
                 mCurrentRecording.fileName
             }, null, null);
             mMediaRecorder = null;
+            Log.i(TAG, "jin old set mState IDLE");
             mState = RecorderState.IDLE;
         }
     }

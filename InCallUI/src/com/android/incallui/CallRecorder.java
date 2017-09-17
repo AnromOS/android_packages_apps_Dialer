@@ -64,11 +64,13 @@ public class CallRecorder implements CallList.Listener {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "jin oldCallRecorder onServiceConnected");
             mService = ICallRecorderService.Stub.asInterface(service);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "jin oldCallRecorder onServiceDisconnected");
             mService = null;
         }
     };
@@ -85,6 +87,7 @@ public class CallRecorder implements CallList.Listener {
     }
 
     private CallRecorder() {
+        Log.i(TAG, "jin oldCallRecorder calling CallList addListener");
         CallList.getInstance().addListener(this);
     }
 
@@ -94,7 +97,7 @@ public class CallRecorder implements CallList.Listener {
 
     private void initialize() {
         if (isEnabled() && !mInitialized) {
-            Log.i(TAG, "jin CallRecorder initialize");
+            Log.i(TAG, "jin oldCallRecorder initialize");
             Intent serviceIntent = new Intent(mContext, CallRecorderService.class);
             mContext.bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
             mInitialized = true;
@@ -110,6 +113,7 @@ public class CallRecorder implements CallList.Listener {
 
     public boolean startRecording(final String phoneNumber, final long creationTime) {
         if (mService == null) {
+            Log.i(TAG, "old CallRecorder.java startRecording mService is null");
             return false;
         }
 

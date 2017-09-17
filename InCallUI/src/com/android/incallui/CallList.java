@@ -60,6 +60,7 @@ public class CallList {
     private static final long BLOCK_QUERY_TIMEOUT_MS = 1000;
 
     private static CallList sInstance = new CallList();
+    private static CallRecorder recorder = CallRecorder.getInstance();
 
     private final HashMap<String, Call> mCallById = new HashMap<>();
     private final HashMap<android.telecom.Call, Call> mCallByTelecomCall = new HashMap<>();
@@ -133,7 +134,7 @@ public class CallList {
 
     private void record(boolean startRecording, Call mCall) {
         Log.i(this, "jin CallList record new RomCallRecorder");
-        RomCallRecorder recorder = RomCallRecorder.getInstance();
+        //~ CallRecorder recorder = CallRecorder.getInstance();
         if (recorder == null) {
             Log.i(this, "jin CallList RomCallRecorder.getInstance result is null");
         }
@@ -149,6 +150,8 @@ public class CallList {
             if (recorder.isRecording()) {
                 Log.i(this, "jin CallList record finishRecording");
                 recorder.finishRecording();
+            }else {
+                Log.i(this, "jin CallList record is not Recording,can not finish");
             }
         }
     }
@@ -158,6 +161,7 @@ public class CallList {
         final Call call = new Call(telecomCall);
         Log.d(this, "onCallAdded: callState=" + call.getState());
         //~ Log.i(this, "jin onCallAdded only: call=" + call);
+        //~ CallRecorder recorder = CallRecorder.getInstance();
 
         if (call.getState() == Call.State.INCOMING ||
                 call.getState() == Call.State.CALL_WAITING) {
@@ -241,6 +245,7 @@ public class CallList {
         PhoneAccountHandle ph = call.getAccountHandle();
         Log.d(this, "onUpdate - " + call  + " ph:" + ph);
         Log.i(this, "jin onUpdate 1 - " + call  + " ph:" + ph);
+        //~ CallRecorder recorder = CallRecorder.getInstance();
         callRecord(call);
         if (call.mIsActiveSub && ph != null) {
             int sub = call.getSubId(ph);

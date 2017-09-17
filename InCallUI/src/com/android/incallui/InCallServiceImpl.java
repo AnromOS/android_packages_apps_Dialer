@@ -81,7 +81,7 @@ public class InCallServiceImpl extends InCallService {
         InCallPresenter.getInstance().maybeStartRevealAnimation(intent);
         TelecomAdapter.getInstance().setInCallService(this);
         CallRecorder.getInstance().setUp(getApplicationContext());
-        RomCallRecorder.getInstance().setUp(getApplicationContext());
+        //RomCallRecorder.getInstance().setUp(getApplicationContext());
 
         return super.onBind(intent);
     }
