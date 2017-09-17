@@ -76,7 +76,7 @@ public final class RomCallRecording implements Parcelable {
 
     @Override
     public String toString() {
-        return "phoneNumber=" + phoneNumber + ", creationTime=" + creationTime +
+        return "jin phoneNumber=" + phoneNumber + ", creationTime=" + creationTime +
                 ", fileName=" + fileName + ", startRecordingTime=" + startRecordingTime;
     }
 }

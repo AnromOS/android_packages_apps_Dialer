@@ -146,6 +146,8 @@ public class RomCallRecorderService extends Service {
         try {
             int audioSource = getAudioSource();
             int formatChoice = getAudioFormatChoice();
+            Log.i(TAG, "jin romrecorder Creating media romrecorder with audio source " + audioSource
+                    + "  formatChoice " + formatChoice);
             if (DBG) Log.d(TAG, "Creating media recorder with audio source " + audioSource);
             mMediaRecorder.setAudioSource(audioSource);
             mMediaRecorder.setOutputFormat(formatChoice == 0
@@ -160,6 +162,7 @@ public class RomCallRecorderService extends Service {
         file.getParentFile().mkdirs();
         String outputPath = file.getAbsolutePath();
         if (DBG) Log.d(TAG, "Writing output to file " + outputPath);
+        Log.i(TAG, "jin romrecorder Writing output to file " + outputPath);
 
         try {
             mMediaRecorder.setOutputFile(outputPath);
@@ -232,7 +235,7 @@ public class RomCallRecorderService extends Service {
 
         int formatChoice = getAudioFormatChoice();
         String extension = formatChoice == 0 ? ".amr" : ".m4a";
-        return number + "_" + timestamp + extension;
+        return number + "_rom_" + timestamp + extension;
     }
 
     public static boolean isEnabled(Context context) {

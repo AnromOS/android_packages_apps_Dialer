@@ -95,10 +95,66 @@ public class CallList {
     CallList() {
     }
 
+    private void callRecord(Call mCall) {
+        Log.i(this, "jin callRecord");
+        //~ call.getState() == Call.State.INCOMING
+                //~ public static final int INVALID = 0;
+        //~ public static final int NEW = 1;            /* The call is new. */
+        //~ public static final int IDLE = 2;           /* The call is idle.  Nothing active */
+        //~ public static final int ACTIVE = 3;         /* There is an active call */
+        //~ public static final int INCOMING = 4;       /* A normal incoming phone call */
+        //~ public static final int CALL_WAITING = 5;   /* Incoming call while another is active */
+        //~ public static final int DIALING = 6;        /* An outgoing call during dial phase */
+        //~ public static final int REDIALING = 7;      /* Subsequent dialing attempt after a failure */
+        //~ public static final int ONHOLD = 8;         /* An active phone call placed on hold */
+        //~ public static final int DISCONNECTING = 9;  /* A call is being ended. */
+        //~ public static final int DISCONNECTED = 10;  /* State after a call disconnects */
+        //~ public static final int CONFERENCED = 11;   /* Call part of a conference call */
+        //~ public static final int SELECT_PHONE_ACCOUNT = 12; /* Waiting for account selection */
+        //~ public static final int CONNECTING = 13;    /* Waiting for Telecom broadcast to finish */
+        //~ public static final int BLOCKED = 14;
+        switch (mCall.getState()) {
+            case Call.State.ACTIVE:
+                record(true, mCall);
+                break;
+
+            case Call.State.DISCONNECTING:
+            case Call.State.DISCONNECTED:
+            case Call.State.ONHOLD:
+            case Call.State.BLOCKED:
+                record(false, mCall);
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    private void record(boolean startRecording, Call mCall) {
+        Log.i(this, "jin CallList record new RomCallRecorder");
+        CallRecorder recorder = CallRecorder.getInstance();
+        boolean isRecording = recorder.isRecording();
+        if (startRecording) {
+            if (!isRecording) {
+                Log.i(this, "jin CallList record startRecording...");
+                recorder.startRecording(mCall.getNumber(), mCall.getCreateTimeMillis());
+            } else {
+                Log.i(this, "jin CallList record isRecording...");
+            }
+        } else {
+            if (recorder.isRecording()) {
+                Log.i(this, "jin CallList record finishRecording");
+                recorder.finishRecording();
+            }
+        }
+    }
+
     public void onCallAdded(final android.telecom.Call telecomCall) {
         Trace.beginSection("onCallAdded");
         final Call call = new Call(telecomCall);
         Log.d(this, "onCallAdded: callState=" + call.getState());
+        Log.i(this, "jin onCallAdded only: call=" + call);
 
         if (call.getState() == Call.State.INCOMING ||
                 call.getState() == Call.State.CALL_WAITING) {
@@ -182,6 +238,7 @@ public class CallList {
         PhoneAccountHandle ph = call.getAccountHandle();
         Log.d(this, "onUpdate - " + call  + " ph:" + ph);
         Log.i(this, "jin onUpdate 1 - " + call  + " ph:" + ph);
+        callRecord(call);
         if (call.mIsActiveSub && ph != null) {
             int sub = call.getSubId(ph);
             Log.d(this, "onUpdate - sub:" + sub + " mSubId:" + mSubId);
