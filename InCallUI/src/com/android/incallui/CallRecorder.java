@@ -91,7 +91,7 @@ public class CallRecorder implements CallList.Listener {
 
     private CallRecorder() {
         Log.i(TAG, "jin old CallRecorder calling CallList addListener");
-        CallList.getInstance().addListener(this);
+        //CallList.getInstance().addListener(this);
     }
 
     public void setUp(Context context) {

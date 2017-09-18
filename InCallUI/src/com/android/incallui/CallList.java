@@ -247,7 +247,7 @@ public class CallList {
         Log.d(this, "onUpdate - " + call  + " ph:" + ph);
         Log.i(this, "jin CallList onUpdate 1 - " + call  + " ph:" + ph);
         //~ CallRecorder recorder = CallRecorder.getInstance();
-        //~ callRecord(call);
+        callRecord(call);
         if (call.mIsActiveSub && ph != null) {
             int sub = call.getSubId(ph);
             Log.d(this, "onUpdate - sub:" + sub + " mSubId:" + mSubId);
