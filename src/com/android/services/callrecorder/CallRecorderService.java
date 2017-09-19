@@ -173,6 +173,7 @@ public class CallRecorderService extends Service {
         } catch (IllegalStateException e) {
             Log.w(TAG, "Error initializing media recorder", e);
             Log.w(TAG, "jin CallRecorderService Error initializing media recorder", e);
+            Log.i(TAG, "jin CallRecorderService Error initializing media recorder IllegalStateException", e);
             return false;
         }
 
@@ -191,8 +192,10 @@ public class CallRecorderService extends Service {
         } catch (IOException e) {
             Log.w(TAG, "Could not start recording for file " + outputPath, e);
             Log.w(TAG, "Deleting failed recording " + outputPath);
-            Log.i(TAG, "jin CallRecorderService Could not start recording for file " + outputPath, e);
-            Log.i(TAG, "jin CallRecorderService Deleting failed recording " + outputPath);
+            Log.w(TAG, "jin CallRecorderService Could not start recording for file " + outputPath, e);
+            Log.w(TAG, "jin CallRecorderService Deleting failed recording " + outputPath);
+            Log.i(TAG, "jin CallRecorderService Could not start recording for file IOException" + outputPath, e);
+            Log.i(TAG, "jin CallRecorderService Deleting failed recording IOException" + outputPath);
             file.delete();
         } catch (IllegalStateException e) {
             Log.w(TAG, "Could not start recording for file " + outputPath, e);

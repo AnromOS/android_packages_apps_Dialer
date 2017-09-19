@@ -152,23 +152,25 @@ public class CallList {
         }
         //~ boolean isRecording = recorder.isRecording();
         if (startRecording) {
-            if (recorder.mServiceExist()) {
-                Log.i(this, "jin CallList record mService exist startRecording...");
+            //~ if (recorder.mServiceExist()) {
+                //~ Log.i(this, "jin CallList record mService exist startRecording...");
                 //~ recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
-                recorder.startRecording(mCall.getNumber(), mCall.getCreateTimeMillis());
-            } else {
-                recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
-                Log.i(this, "jin CallList record mService NOT exist setRecordOptions...");
-            }
+                //~ recorder.startRecording(mCall.getNumber(), mCall.getCreateTimeMillis());
+            //~ } else {
+                //~ recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
+                //~ Log.i(this, "jin CallList record mService NOT exist setRecordOptions...");
+            //~ }
+            Log.i(this, "jin CallList record setRecordOptions...");
+            recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
             isRecording = true;
         } else {
             if (recorder.isRecording()) {
                 Log.i(this, "jin CallList record finishRecording");
                 recorder.finishRecording();
-                isRecording = false;
             }else {
                 Log.i(this, "jin CallList record is not Recording,can not finish");
             }
+            isRecording = false;
         }
     }
 
