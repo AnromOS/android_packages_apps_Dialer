@@ -368,6 +368,8 @@ public class CallCardPresenter extends Presenter<CallCardPresenter.CallCardUi> i
             ui.setPrimaryCallElapsedTime(false, 0);
             if (isEnabled && !isVideo) {
                 if (recorder.isRecording()) {
+                    //disable by rom -jin
+                    Log.i(this, "CallCardPresenter.java recorder finish");
                     recorder.finishRecording();
                 }
             }

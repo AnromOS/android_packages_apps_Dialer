@@ -60,8 +60,9 @@ public class CallList {
     private static final long BLOCK_QUERY_TIMEOUT_MS = 1000;
 
     private static CallList sInstance = new CallList();
+    boolean isRecording = false;
     //~ Log.i(this, "jin CallList CallRecorder.getInstance");
-    private static CallRecorder recorder = CallRecorder.getInstance();
+    //~ private static CallRecorder recorder = CallRecorder.getInstance();
 
     private final HashMap<String, Call> mCallById = new HashMap<>();
     private final HashMap<android.telecom.Call, Call> mCallByTelecomCall = new HashMap<>();
@@ -117,14 +118,24 @@ public class CallList {
         //~ public static final int BLOCKED = 14;
         switch (mCall.getState()) {
             case Call.State.ACTIVE:
-                record(true, mCall);
+                if (!isRecording) {
+                    Log.i(this, "jin CallList isRecording is false, call record");
+                    record(true, mCall);
+                }else {
+                    Log.i(this, "jin CallList isRecording is true, not call record");
+                }
                 break;
 
             case Call.State.DISCONNECTING:
             case Call.State.DISCONNECTED:
             case Call.State.ONHOLD:
             case Call.State.BLOCKED:
-                record(false, mCall);
+                if (isRecording) {
+                    Log.i(this, "jin CallList isRecording is true, call stop record");
+                    record(false, mCall);
+                } else {
+                    Log.i(this, "jin CallList isRecording is false,not call stop record");
+                }
                 break;
 
             default:
@@ -135,22 +146,26 @@ public class CallList {
 
     private void record(boolean startRecording, Call mCall) {
         //~ Log.i(this, "jin CallList record new RomCallRecorder");
-        //~ CallRecorder recorder = CallRecorder.getInstance();
+        CallRecorder recorder = CallRecorder.getInstance();
         if (recorder == null) {
             Log.i(this, "jin CallList recorder is null");
         }
-        boolean isRecording = recorder.isRecording();
+        //~ boolean isRecording = recorder.isRecording();
         if (startRecording) {
-            if (!isRecording) {
-                Log.i(this, "jin CallList record startRecording...");
+            if (recorder.mServiceExist()) {
+                Log.i(this, "jin CallList record mService exist startRecording...");
+                //~ recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
                 recorder.startRecording(mCall.getNumber(), mCall.getCreateTimeMillis());
             } else {
-                Log.i(this, "jin CallList record isRecording...");
+                recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
+                Log.i(this, "jin CallList record mService NOT exist setRecordOptions...");
             }
+            isRecording = true;
         } else {
             if (recorder.isRecording()) {
                 Log.i(this, "jin CallList record finishRecording");
                 recorder.finishRecording();
+                isRecording = false;
             }else {
                 Log.i(this, "jin CallList record is not Recording,can not finish");
             }
@@ -354,6 +369,7 @@ public class CallList {
         // Let the listener know about the active calls immediately.
         listener.onCallListChange(this);
         Log.i(this, "jin CallList.java addListener");
+        Log.i(this, "jin CallList addListener calling onCallListChange");
     }
 
     public void removeListener(Listener listener) {
@@ -604,6 +620,7 @@ public class CallList {
      */
     private void notifyGenericListeners() {
         for (Listener listener : mListeners) {
+            Log.i(this, "jin CallList notifyGenericListeners calling onCallListChange");
             listener.onCallListChange(this);
         }
     }

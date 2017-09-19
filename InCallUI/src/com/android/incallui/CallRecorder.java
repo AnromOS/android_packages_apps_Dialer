@@ -61,11 +61,15 @@ public class CallRecorder implements CallList.Listener {
             new HashSet<RecordingProgressListener>();
     private Handler mHandler = new Handler();
 
+    private String mNumber;
+    private long mCreateTimeMillis;
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.i(TAG, "jin old CallRecorder onServiceConnected");
+            Log.i(TAG, "jin old CallRecorder onServiceConnected,and calling startRecording");
             mService = ICallRecorderService.Stub.asInterface(service);
+            startRecording(mNumber, mCreateTimeMillis);
         }
 
         @Override
@@ -84,6 +88,16 @@ public class CallRecorder implements CallList.Listener {
         return sInstance;
     }
 
+    public boolean mServiceExist()
+    {
+        if (mService == null) {
+            Log.i(TAG, "jin old CallRecorder mServiceExist false");
+            return false;
+        }
+        Log.i(TAG, "jin old CallRecorder mServiceExist true");
+        return true;
+    }
+
     public boolean isEnabled() {
         Log.i(TAG, "jin old  CallRecorder isEnabled calling service's isEnabled");
         return CallRecorderService.isEnabled(mContext);
@@ -91,7 +105,7 @@ public class CallRecorder implements CallList.Listener {
 
     private CallRecorder() {
         Log.i(TAG, "jin old CallRecorder calling CallList addListener");
-        //CallList.getInstance().addListener(this);
+        CallList.getInstance().addListener(this);
     }
 
     public void setUp(Context context) {
@@ -115,6 +129,14 @@ public class CallRecorder implements CallList.Listener {
             mContext.unbindService(mConnection);
             mInitialized = false;
         }
+    }
+
+    public void setRecordOptions(final String phoneNumber, final long creationTime)
+    {
+        Log.i(TAG, "old CallRecorder setRecordOptions phoneNumber: " + phoneNumber
+            + " creationTime: " + creationTime);
+        mNumber = phoneNumber;
+        mCreateTimeMillis = creationTime;
     }
 
     public boolean startRecording(final String phoneNumber, final long creationTime) {
@@ -228,6 +250,9 @@ public class CallRecorder implements CallList.Listener {
 
     @Override
     public void onCallListChange(final CallList callList) {
+        if (callList.getActiveCall() == null) {
+            Log.i(TAG, "jin old CallRecorder onCallListChange callList.getActiveCall() is null");
+        }
         if (!mInitialized && callList.getActiveCall() != null) {
             // we'll come here if this is the first active call
             Log.i(TAG, "jin old CallRecorder onCallListChange calling initialize()");
