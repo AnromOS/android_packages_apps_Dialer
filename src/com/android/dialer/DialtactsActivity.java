@@ -593,8 +593,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         setConferenceDialButtonImage(false);
         setConferenceDialButtonVisibility(true);
 
-        SmartDialPrefix.initializeNanpSettings(this);
-
         if (Calls.CONTENT_TYPE.equals(getIntent().getType())) {
             // Externally specified extras take precedence to EXTRA_SHOW_TAB, which is only
             // used internally.
@@ -1273,7 +1271,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             mSmartDialSearchFragment.setAddToContactNumber(query);
         }
         final String normalizedQuery = SmartDialNameMatcher.normalizeNumber(query,
-                SmartDialPrefix.getMap());
+                SmartDialNameMatcher.LATIN_SMART_DIAL_MAP);
 
         if (!TextUtils.equals(mSearchView.getText(), normalizedQuery)) {
             if (DEBUG) {
