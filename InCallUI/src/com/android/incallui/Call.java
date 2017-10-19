@@ -1098,7 +1098,7 @@ public class Call {
 
         return String.format(Locale.US, "[%s, %s, %s, %s, children:%s, parent:%s, " +
                 "conferenceable:%s, videoState:%s, mSessionModificationState:%d, VideoSettings:%s" +
-                ", mIsActivSub:%b]" ,
+                ", mIsActivSub:%b, tel:%s]" ,
                 mId,
                 State.toString(getState()),
                 Details.capabilitiesToString(mTelecomCall.getDetails().getCallCapabilities()),
@@ -1108,7 +1108,8 @@ public class Call {
                 this.mTelecomCall.getConferenceableCalls(),
                 VideoProfile.videoStateToString(mTelecomCall.getDetails().getVideoState()),
                 mSessionModificationState,
-                getVideoSettings(), mIsActiveSub);
+                getVideoSettings(), mIsActiveSub,
+                getNumber());
     }
 
     public String toSimpleString() {

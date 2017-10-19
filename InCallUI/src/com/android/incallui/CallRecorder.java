@@ -61,39 +61,61 @@ public class CallRecorder implements CallList.Listener {
             new HashSet<RecordingProgressListener>();
     private Handler mHandler = new Handler();
 
+    private String mNumber;
+    private long mCreateTimeMillis;
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "jin old CallRecorder onServiceConnected,and calling startRecording");
             mService = ICallRecorderService.Stub.asInterface(service);
+            startRecording(mNumber, mCreateTimeMillis);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "jin old CallRecorder onServiceDisconnected");
             mService = null;
         }
     };
 
     public static CallRecorder getInstance() {
         if (sInstance == null) {
+            Log.i(TAG, "jin old  CallRecorder getInstance sInstance is null,new it");
             sInstance = new CallRecorder();
         }
+        Log.i(TAG, "jin old CallRecorder getInstance return sInstance");
         return sInstance;
     }
 
+    public boolean mServiceExist()
+    {
+        if (mService == null) {
+            Log.i(TAG, "jin old CallRecorder mServiceExist false");
+            return false;
+        }
+        Log.i(TAG, "jin old CallRecorder mServiceExist true");
+        return true;
+    }
+
     public boolean isEnabled() {
+        Log.i(TAG, "jin old  CallRecorder isEnabled calling service's isEnabled");
         return CallRecorderService.isEnabled(mContext);
     }
 
     private CallRecorder() {
+        Log.i(TAG, "jin old CallRecorder calling CallList addListener");
         CallList.getInstance().addListener(this);
     }
 
     public void setUp(Context context) {
+        Log.i(TAG, "jin old CallRecorder setUp");
         mContext = context.getApplicationContext();
     }
 
     private void initialize() {
         if (isEnabled() && !mInitialized) {
+            Log.i(TAG, "jin old CallRecorder initialize");
             Intent serviceIntent = new Intent(mContext, CallRecorderService.class);
             mContext.bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
             mInitialized = true;
@@ -101,14 +123,25 @@ public class CallRecorder implements CallList.Listener {
     }
 
     private void uninitialize() {
+        Log.i(TAG, "jin old CallRecorder uninitialize");
         if (mInitialized) {
+            Log.i(TAG, "jin old CallRecorder unbindService");
             mContext.unbindService(mConnection);
             mInitialized = false;
         }
     }
 
+    public void setRecordOptions(final String phoneNumber, final long creationTime)
+    {
+        Log.i(TAG, "old CallRecorder setRecordOptions phoneNumber: " + phoneNumber
+            + " creationTime: " + creationTime);
+        mNumber = phoneNumber;
+        mCreateTimeMillis = creationTime;
+    }
+
     public boolean startRecording(final String phoneNumber, final long creationTime) {
         if (mService == null) {
+            Log.i(TAG, "old CallRecorder startRecording mService is null");
             return false;
         }
 
@@ -126,6 +159,8 @@ public class CallRecorder implements CallList.Listener {
         } catch (RemoteException e) {
             Log.w(TAG, "Failed to start recording " + phoneNumber + ", " +
                     new Date(creationTime), e);
+            Log.i(TAG, "jin old CallRecorder startRecording Failed to start recording " + phoneNumber + ", " +
+                    new Date(creationTime), e);
         }
 
         return false;
@@ -133,6 +168,7 @@ public class CallRecorder implements CallList.Listener {
 
     public boolean isRecording() {
         if (mService == null) {
+            Log.i(TAG, "jin old  CallRecorder isRecording mService is null");
             return false;
         }
 
@@ -140,19 +176,23 @@ public class CallRecorder implements CallList.Listener {
             return mService.isRecording();
         } catch (RemoteException e) {
             Log.w(TAG, "Exception checking recording status", e);
+            Log.i(TAG, "jin old  CallRecorder Exception checking recording status", e);
         }
         return false;
     }
 
     public CallRecording getActiveRecording() {
         if (mService == null) {
+            Log.i(TAG, "jin old  CallRecorder getActiveRecording mService is null");
             return null;
         }
 
         try {
+            Log.i(TAG, "jin old  CallRecorder getActiveRecording calling mService.getActiveRecording");
             return mService.getActiveRecording();
         } catch (RemoteException e) {
-            Log.w("Exception getting active recording", e);
+            Log.w("jin old CallRecording Exception getting active recording", e);
+            //~ Log.w("Exception getting active recording", e);
         }
         return null;
     }
@@ -160,12 +200,14 @@ public class CallRecorder implements CallList.Listener {
     public void finishRecording() {
         if (mService != null) {
             try {
+                Log.i(TAG, "jin old CallRecorder finishRecording calling mService.stopRecording");
                 final CallRecording recording = mService.stopRecording();
                 if (recording != null) {
                     if (!TextUtils.isEmpty(recording.phoneNumber)) {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
+                                Log.i(TAG, "jin old CallRecorder finishRecording dataStore write");
                                 CallRecordingDataStore dataStore = new CallRecordingDataStore();
                                 dataStore.open(mContext);
                                 dataStore.putRecording(recording);
@@ -173,6 +215,7 @@ public class CallRecorder implements CallList.Listener {
                             }
                         }).start();
                     } else {
+                        Log.i(TAG, "jin old CallRecorder recording.phoneNum is null");
                         // Data store is an index by number so that we can link recordings in the
                         // call detail page.  If phone number is not available (conference call or
                         // unknown number) then just display a toast.
@@ -180,10 +223,15 @@ public class CallRecorder implements CallList.Listener {
                                 R.string.call_recording_file_location, recording.fileName);
                         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Log.i(TAG, "jin old CallRecorder finishRecording recording is null");
                 }
             } catch (RemoteException e) {
                 Log.w(TAG, "Failed to stop recording", e);
+                Log.i(TAG, "jin old CallRecorder Failed to stop recording", e);
             }
+        } else {
+            Log.i(TAG, "jin old CallRecorder finishRecording mService is null");
         }
 
         for (RecordingProgressListener l : mProgressListeners) {
@@ -202,20 +250,30 @@ public class CallRecorder implements CallList.Listener {
 
     @Override
     public void onCallListChange(final CallList callList) {
+        if (callList.getActiveCall() == null) {
+            Log.i(TAG, "jin old CallRecorder onCallListChange callList.getActiveCall() is null");
+        }
         if (!mInitialized && callList.getActiveCall() != null) {
             // we'll come here if this is the first active call
+            Log.i(TAG, "jin old CallRecorder onCallListChange calling initialize()");
             initialize();
         } else {
             // we can come down this branch to resume a call that was on hold
             CallRecording active = getActiveRecording();
             if (active != null) {
+                Log.i(TAG, "jin old CallRecorder onCallListChange activeRecorfing is not null");
                 Call call = callList.getCallWithStateAndNumber(Call.State.ONHOLD,
                         active.phoneNumber);
                 if (call != null) {
                     // The call associated with the active recording has been placed
                     // on hold, so stop the recording.
+                    Log.i(TAG, "jin old CallRecorder onCallListChange call is not null,calling finishRecording");
                     finishRecording();
+                } else {
+                    Log.i(TAG, "jin old CallRecorder onCallListChange call is null");
                 }
+            } else {
+                Log.i(TAG, "jin old CallRecorder onCallListChange activeRecording is null");
             }
         }
     }
@@ -225,11 +283,13 @@ public class CallRecorder implements CallList.Listener {
         CallRecording active = getActiveRecording();
         if (active != null && TextUtils.equals(call.getNumber(), active.phoneNumber)) {
             // finish the current recording if the call gets disconnected
+            Log.i(TAG, "jin old CallRecorder onDisconnect calling finishRecording");
             finishRecording();
         }
 
         // tear down the service if there are no more active calls
         if (CallList.getInstance().getActiveCall() == null) {
+            Log.i(TAG, "jin old CallRecorder onDisconnect calling uninitialize");
             uninitialize();
         }
     }

@@ -60,6 +60,9 @@ public class CallList {
     private static final long BLOCK_QUERY_TIMEOUT_MS = 1000;
 
     private static CallList sInstance = new CallList();
+    boolean isRecording = false;
+    //~ Log.i(this, "jin CallList CallRecorder.getInstance");
+    //~ private static CallRecorder recorder = CallRecorder.getInstance();
 
     private final HashMap<String, Call> mCallById = new HashMap<>();
     private final HashMap<android.telecom.Call, Call> mCallByTelecomCall = new HashMap<>();
@@ -95,19 +98,97 @@ public class CallList {
     CallList() {
     }
 
+    private void callRecord(Call mCall) {
+        Log.i(this, "jin CallList callRecord");
+        //~ call.getState() == Call.State.INCOMING
+                //~ public static final int INVALID = 0;
+        //~ public static final int NEW = 1;            /* The call is new. */
+        //~ public static final int IDLE = 2;           /* The call is idle.  Nothing active */
+        //~ public static final int ACTIVE = 3;         /* There is an active call */
+        //~ public static final int INCOMING = 4;       /* A normal incoming phone call */
+        //~ public static final int CALL_WAITING = 5;   /* Incoming call while another is active */
+        //~ public static final int DIALING = 6;        /* An outgoing call during dial phase */
+        //~ public static final int REDIALING = 7;      /* Subsequent dialing attempt after a failure */
+        //~ public static final int ONHOLD = 8;         /* An active phone call placed on hold */
+        //~ public static final int DISCONNECTING = 9;  /* A call is being ended. */
+        //~ public static final int DISCONNECTED = 10;  /* State after a call disconnects */
+        //~ public static final int CONFERENCED = 11;   /* Call part of a conference call */
+        //~ public static final int SELECT_PHONE_ACCOUNT = 12; /* Waiting for account selection */
+        //~ public static final int CONNECTING = 13;    /* Waiting for Telecom broadcast to finish */
+        //~ public static final int BLOCKED = 14;
+        switch (mCall.getState()) {
+            case Call.State.ACTIVE:
+                if (!isRecording) {
+                    Log.i(this, "jin CallList isRecording is false, call record");
+                    record(true, mCall);
+                }else {
+                    Log.i(this, "jin CallList isRecording is true, not call record");
+                }
+                break;
+
+            case Call.State.DISCONNECTING:
+            case Call.State.DISCONNECTED:
+            case Call.State.ONHOLD:
+            case Call.State.BLOCKED:
+                if (isRecording) {
+                    Log.i(this, "jin CallList isRecording is true, call stop record");
+                    record(false, mCall);
+                } else {
+                    Log.i(this, "jin CallList isRecording is false,not call stop record");
+                }
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    private void record(boolean startRecording, Call mCall) {
+        //~ Log.i(this, "jin CallList record new RomCallRecorder");
+        CallRecorder recorder = CallRecorder.getInstance();
+        if (recorder == null) {
+            Log.i(this, "jin CallList recorder is null");
+        }
+        //~ boolean isRecording = recorder.isRecording();
+        if (startRecording) {
+            //~ if (recorder.mServiceExist()) {
+                //~ Log.i(this, "jin CallList record mService exist startRecording...");
+                //~ recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
+                //~ recorder.startRecording(mCall.getNumber(), mCall.getCreateTimeMillis());
+            //~ } else {
+                //~ recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
+                //~ Log.i(this, "jin CallList record mService NOT exist setRecordOptions...");
+            //~ }
+            Log.i(this, "jin CallList record setRecordOptions...");
+            recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
+            isRecording = true;
+        } else {
+            if (recorder.isRecording()) {
+                Log.i(this, "jin CallList record finishRecording");
+                recorder.finishRecording();
+            }else {
+                Log.i(this, "jin CallList record is not Recording,can not finish");
+            }
+            isRecording = false;
+        }
+    }
+
     public void onCallAdded(final android.telecom.Call telecomCall) {
         Trace.beginSection("onCallAdded");
         final Call call = new Call(telecomCall);
-        Log.d(this, "onCallAdded: callState=" + call.getState());
+        Log.d(this, "jin CallList onCallAdded: callState=" + call.getState());
+        //~ Log.i(this, "jin onCallAdded only: call=" + call);
+        //~ CallRecorder recorder = CallRecorder.getInstance();
 
         if (call.getState() == Call.State.INCOMING ||
                 call.getState() == Call.State.CALL_WAITING) {
-            Log.i(this, "jin Dialer CallList.java onCallAdded "
-                "calling onIncoming");
+            //~ Log.i(this, "jin Dialer CallList.java onCallAdded " +
+                //~ "calling onIncoming");
             onIncoming(call, call.getCannedSmsResponses());
         } else {
-            Log.i(this, "jin Dialer CallList.java onCallAdded "
-                "callilng onUpdate");
+            //~ Log.i(this, "jin Dialer CallList.java onCallAdded " +
+                //~ "callilng onUpdate");
             onUpdate(call);
         }
 
@@ -131,7 +212,7 @@ public class CallList {
      */
     public void onDisconnect(Call call) {
         if (updateCallInMap(call)) {
-            Log.i(this, "onDisconnect: " + call);
+            Log.i(this, "jin CallList onDisconnect: " + call);
             // notify those listening for changes on this specific change
             notifyCallUpdateListeners(call);
             // notify those listening for all disconnects
@@ -144,14 +225,14 @@ public class CallList {
      */
     public void onIncoming(Call call, List<String> textMessages) {
         Log.d(this, "onIncoming - " + call);
-        Log.i(this, "jin onIncoming 1 - " + call);
+        Log.i(this, "jin CallList onIncoming " + call);
 
         // Update active subscription from call object. it will be set by
         // Telecomm service for incoming call and whenever active sub changes.
         if (call.mIsActiveSub) {
             int sub = call.getSubId();
             Log.d(this, "onIncoming - sub:" + sub + " mSubId:" + mSubId);
-            Log.i(this, "jin onIncoming 2 - sub:" + sub + " mSubId:" + mSubId);
+            Log.i(this, "jin CallList onIncoming - sub:" + sub + " mSubId:" + mSubId);
             if (sub != mSubId) {
                 setActiveSubId(sub);
             }
@@ -159,7 +240,7 @@ public class CallList {
 
         if (updateCallInMap(call)) {
             Log.i(this, "onIncoming - " + call);
-            Log.i(this, "jin onIncoming 3 - " + call);
+            //~ Log.i(this, "jin onIncoming 3 - " + call);
         }
         updateCallTextMap(call, textMessages);
 
@@ -181,17 +262,19 @@ public class CallList {
         Trace.beginSection("onUpdate");
         PhoneAccountHandle ph = call.getAccountHandle();
         Log.d(this, "onUpdate - " + call  + " ph:" + ph);
-        Log.i(this, "jin onUpdate 1 - " + call  + " ph:" + ph);
+        Log.i(this, "jin CallList onUpdate 1 - " + call  + " ph:" + ph);
+        //~ CallRecorder recorder = CallRecorder.getInstance();
+        callRecord(call);
         if (call.mIsActiveSub && ph != null) {
             int sub = call.getSubId(ph);
             Log.d(this, "onUpdate - sub:" + sub + " mSubId:" + mSubId);
-            Log.i(this, "jin onUpdate - sub:" + sub + " mSubId:" + mSubId);
+            //~ Log.i(this, "jin onUpdate - sub:" + sub + " mSubId:" + mSubId);
             if(sub != mSubId) {
                 setActiveSubId(sub);
             }
         }
-        Log.i(this, "jin Dialer CallList.java onUpdate "
-            "calling onUpdateCall");
+        //~ Log.i(this, "jin Dialer CallList.java onUpdate " +
+            //~ "calling onUpdateCall");
         onUpdateCall(call);
         notifyGenericListeners();
         Trace.endSection();
@@ -287,6 +370,8 @@ public class CallList {
 
         // Let the listener know about the active calls immediately.
         listener.onCallListChange(this);
+        Log.i(this, "jin CallList.java addListener");
+        Log.i(this, "jin CallList addListener calling onCallListChange");
     }
 
     public void removeListener(Listener listener) {
@@ -525,7 +610,7 @@ public class CallList {
         Log.d(this, "\t" + call);
         if (updateCallInMap(call)) {
             Log.i(this, "onUpdate - " + call);
-            Log.i(this, "jin onUpdate 2 - onUpdateCall" + call);
+            //~ Log.i(this, "jin onUpdate 2 - onUpdateCall" + call);
         }
         updateCallTextMap(call, call.getCannedSmsResponses());
         notifyCallUpdateListeners(call);
@@ -537,6 +622,7 @@ public class CallList {
      */
     private void notifyGenericListeners() {
         for (Listener listener : mListeners) {
+            Log.i(this, "jin CallList notifyGenericListeners calling onCallListChange");
             listener.onCallListChange(this);
         }
     }
