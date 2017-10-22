@@ -57,7 +57,8 @@ public final class CallRecording implements Parcelable {
     }
 
     public File getFile() {
-        File dir = Environment.getExternalStoragePublicDirectory(PUBLIC_DIRECTORY_NAME);
+        //File dir = Environment.getExternalStoragePublicDirectory(PUBLIC_DIRECTORY_NAME);
+        File dir = new File("/data/private_anrom/"+PUBLIC_DIRECTORY_NAME);
         return new File(dir, fileName);
     }
 
