@@ -491,7 +491,7 @@ public class CallButtonPresenter extends Presenter<CallButtonPresenter.CallButto
 
     public void startCallRecording() {
         CallRecorder recorder = CallRecorder.getInstance();
-        recorder.startRecording(mCall.getNumber(), mCall.getCreateTimeMillis());
+        recorder.startRecording(mCall.getNumber(), mCall.getCreateTimeMillis(), true);
         getUi().setCallRecordingState(recorder.isRecording());
     }
 

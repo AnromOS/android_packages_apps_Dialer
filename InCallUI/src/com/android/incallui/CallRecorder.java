@@ -144,8 +144,8 @@ public class CallRecorder implements CallList.Listener {
         mIsOutgoing = isOutgoing;
     }
 
-    public boolean startRecording(final String phoneNumber, final long creationTime
-                        final isOutgoing) {
+    public boolean startRecording(final String phoneNumber, final long creationTime,
+                        final boolean isOutgoing) {
         if (mService == null) {
             Log.i(TAG, "old CallRecorder startRecording mService is null");
             return false;

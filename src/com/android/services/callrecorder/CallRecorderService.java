@@ -76,9 +76,9 @@ public class CallRecorderService extends Service {
                 throws RemoteException {
             String fileName = generateFilename(phoneNumber, isOutgoing);
             mCurrentRecording = new CallRecording(phoneNumber, creationTime,
-                    fileName, System.currentTimeMillis(), isOutgoing);
+                    fileName, System.currentTimeMillis());
             Log.i(TAG, "jin CallRecorderService startRecording fileName:[" + fileName + "] new mCurrentRecording"
-                + " calling startRecordingInternal" + isOutgoing? "outgoing":"incoming");
+                + " calling startRecordingInternal");
             return startRecordingInternal(mCurrentRecording.getFile());
 
         }
@@ -267,7 +267,7 @@ public class CallRecorderService extends Service {
         return mState;
     }
 
-    private String generateFilename(String number) {
+    private String generateFilename(String number, boolean isOutgoing) {
         String timestamp = DATE_FORMAT.format(new Date());
 
         if (TextUtils.isEmpty(number)) {
@@ -279,8 +279,8 @@ public class CallRecorderService extends Service {
 
         int formatChoice = getAudioFormatChoice();
         String extension = formatChoice == 0 ? ".amr" : ".m4a";
-        Log.i(TAG, "jin CallRecorderService generateFilename : "
-                direction "_"  + number + "_" + timestamp + extension);
+        Log.i(TAG, "jin CallRecorderService generateFilename : " +
+                direction + "_"  + number + "_" + timestamp + extension);
         return direction + "_" + number + "_" + timestamp + extension;
     }
 

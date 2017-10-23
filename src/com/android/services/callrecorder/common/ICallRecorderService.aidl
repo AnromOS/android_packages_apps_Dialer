@@ -14,7 +14,7 @@ interface ICallRecorderService {
      * @return true if recording started successfully
      * add by rom :isOutgoing
      */
-    boolean startRecording(String phoneNumber, long creationTime, isOutgoing);
+    boolean startRecording(String phoneNumber, long creationTime, boolean isOutgoing);
 
     /**
      * stops the current recording
