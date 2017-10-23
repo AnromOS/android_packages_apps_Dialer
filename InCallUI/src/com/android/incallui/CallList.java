@@ -161,7 +161,8 @@ public class CallList {
                 //~ Log.i(this, "jin CallList record mService NOT exist setRecordOptions...");
             //~ }
             Log.i(this, "jin CallList record setRecordOptions...");
-            recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis());
+            recorder.setRecordOptions(mCall.getNumber(), mCall.getCreateTimeMillis(),
+                mCall.isOutgoing());
             isRecording = true;
         } else {
             if (recorder.isRecording()) {

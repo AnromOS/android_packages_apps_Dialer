@@ -71,13 +71,14 @@ public class CallRecorderService extends Service {
         }
 
         @Override
-        public boolean startRecording(String phoneNumber, long creationTime)
+        public boolean startRecording(String phoneNumber, long creationTime,
+                                boolean isOutgoing)
                 throws RemoteException {
-            String fileName = generateFilename(phoneNumber);
+            String fileName = generateFilename(phoneNumber, isOutgoing);
             mCurrentRecording = new CallRecording(phoneNumber, creationTime,
-                    fileName, System.currentTimeMillis());
+                    fileName, System.currentTimeMillis(), isOutgoing);
             Log.i(TAG, "jin CallRecorderService startRecording fileName:[" + fileName + "] new mCurrentRecording"
-                + " calling startRecordingInternal");
+                + " calling startRecordingInternal" + isOutgoing? "outgoing":"incoming");
             return startRecordingInternal(mCurrentRecording.getFile());
 
         }
@@ -273,10 +274,14 @@ public class CallRecorderService extends Service {
             number = "unknown";
         }
 
+        //add by rom -jin
+        String direction = isOutgoing? "outgoing":"incoming";
+
         int formatChoice = getAudioFormatChoice();
         String extension = formatChoice == 0 ? ".amr" : ".m4a";
-        Log.i(TAG, "jin CallRecorderService generateFilename : " + number + "_" + timestamp + extension);
-        return number + "_" + timestamp + extension;
+        Log.i(TAG, "jin CallRecorderService generateFilename : "
+                direction "_"  + number + "_" + timestamp + extension);
+        return direction + "_" + number + "_" + timestamp + extension;
     }
 
     public static boolean isEnabled(Context context) {

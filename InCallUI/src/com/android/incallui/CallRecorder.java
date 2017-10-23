@@ -64,12 +64,15 @@ public class CallRecorder implements CallList.Listener {
     private String mNumber;
     private long mCreateTimeMillis;
 
+    //add by rom --jin
+    private boolean mIsOutgoing;
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.i(TAG, "jin old CallRecorder onServiceConnected,and calling startRecording");
             mService = ICallRecorderService.Stub.asInterface(service);
-            startRecording(mNumber, mCreateTimeMillis);
+            startRecording(mNumber, mCreateTimeMillis, mIsOutgoing);
         }
 
         @Override
@@ -131,22 +134,25 @@ public class CallRecorder implements CallList.Listener {
         }
     }
 
-    public void setRecordOptions(final String phoneNumber, final long creationTime)
+    public void setRecordOptions(final String phoneNumber, final long creationTime,
+                                boolean isOutgoing)
     {
         Log.i(TAG, "old CallRecorder setRecordOptions phoneNumber: " + phoneNumber
             + " creationTime: " + creationTime);
         mNumber = phoneNumber;
         mCreateTimeMillis = creationTime;
+        mIsOutgoing = isOutgoing;
     }
 
-    public boolean startRecording(final String phoneNumber, final long creationTime) {
+    public boolean startRecording(final String phoneNumber, final long creationTime
+                        final isOutgoing) {
         if (mService == null) {
             Log.i(TAG, "old CallRecorder startRecording mService is null");
             return false;
         }
 
         try {
-            if (mService.startRecording(phoneNumber, creationTime)) {
+            if (mService.startRecording(phoneNumber, creationTime, isOutgoing)) {
                 for (RecordingProgressListener l : mProgressListeners) {
                     l.onStartRecording();
                 }
