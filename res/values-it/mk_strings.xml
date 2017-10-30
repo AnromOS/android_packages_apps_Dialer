@@ -20,6 +20,8 @@
   <string name="preference_category_t9_dialpad_search">Ricerca tastierino T9</string>
   <string name="t9_search_input_locale">Input ricerca T9</string>
   <string name="t9_search_input_locale_default">Predefinito</string>
+  <string name="missing_account_type">(Nessun tipo)</string>
+  <string name="missing_account_name">(Nessun nome)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">Contrassegna come</string>
   <string name="description_user_mark_action">Contrassegna<xliff:g id="nameOrNumber" example="John Smith"> ^ 1 </xliff:g> come</string>
