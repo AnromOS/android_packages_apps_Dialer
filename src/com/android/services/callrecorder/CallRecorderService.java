@@ -44,6 +44,9 @@ public class CallRecorderService extends Service {
     private static final String TAG = "CallRecorderService";
     private static final boolean DBG = false;
 
+    //add by rom
+    private static final String RECORD_FINISHED = "com.android.services.callrecorder.RECORD_FINISHED";
+
     private static enum RecorderState {
         IDLE,
         RECORDING
@@ -209,21 +212,25 @@ public class CallRecorderService extends Service {
             if (e.getMessage().indexOf("start failed") >= 0) {
                 Log.w(TAG, "Could not start recording for file " + outputPath, e);
                 Log.w(TAG, "Deleting failed recording " + outputPath);
-                Log.i(TAG, "jin CallRecorderService Could not start recording for file " + outputPath, e);
-                Log.i(TAG, "jin CallRecorderService Deleting failed recording " + outputPath);
                 file.delete();
             } else {
-                Log.i(TAG, "jin CallRecorderService startRecordingInternal throw e");
                 throw e;
             }
         }
 
-        Log.i(TAG, "jin CallRecorderService startRecordingInternal mMediaRecorder reset release setNULL");
         mMediaRecorder.reset();
         mMediaRecorder.release();
         mMediaRecorder = null;
 
         return false;
+    }
+
+    //add by rom
+    private void sendRecordFinishedBroadcast(String fileName) {
+        Intent intent = new Intent();  
+        intent.setAction(RECORD_FINISHED);  
+        intent.putExtra("filename", fileName);  
+        sendBroadcast(intent);  
     }
 
     private synchronized void stopRecordingInternal() {
@@ -237,6 +244,7 @@ public class CallRecorderService extends Service {
                     mMediaRecorder.stop();
                     mMediaRecorder.reset();
                     mMediaRecorder.release();
+                    sendRecordFinishedBroadcast(mCurrentRecording.fileName);
                 } else {
                     Log.i(TAG, "jin CallRecorderService stopRecordingInternal state is NOT RECORDING");
                 }
