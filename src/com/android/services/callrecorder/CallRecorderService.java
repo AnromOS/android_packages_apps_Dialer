@@ -45,8 +45,8 @@ public class CallRecorderService extends Service {
     private static final boolean DBG = false;
 
     //add by rom
-    private static final String RECORD_FINISHED = "com.android.services.callrecorder.RECORD_FINISHED";
-
+    private static final String RECORD_FINISHED = "com.android.services.callrecorder.CALL_RECORD_FINISHED";
+    private static final String RECORD_FINISHED_PERMISSION = "com.android.dialer.CALL_RECORD_FINISHED";
     private static enum RecorderState {
         IDLE,
         RECORDING
@@ -58,7 +58,7 @@ public class CallRecorderService extends Service {
 
     private static final String AUDIO_SOURCE_PROPERTY = "persist.call_recording.src";
 
-    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyMMdd_HHmmssSSS");
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyMMdd_HHmmss");
 
     private final ICallRecorderService.Stub mBinder = new ICallRecorderService.Stub() {
         @Override
@@ -230,7 +230,7 @@ public class CallRecorderService extends Service {
         Intent intent = new Intent();  
         intent.setAction(RECORD_FINISHED);  
         intent.putExtra("filename", fileName);  
-        sendBroadcast(intent);  
+        sendBroadcast(intent, RECORD_FINISHED_PERMISSION);
     }
 
     private synchronized void stopRecordingInternal() {

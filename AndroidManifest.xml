@@ -24,6 +24,10 @@
         android:minSdkVersion="23"
         android:targetSdkVersion="23" />
 
+    <!-- add by rom -->
+    <permission android:name="com.android.dialer.CALL_RECORD_FINISHED"
+                android:protectionLevel="normal"/>
+
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
