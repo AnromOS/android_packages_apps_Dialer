@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2017 The MoKee Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +34,8 @@ public class DisplayOptionsSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener {
 
     private static final String BUTTON_T9_SEARCH_INPUT_LOCALE = "button_t9_search_input";
+    private static final String SORT_ORDER = "sortOrder";
+    private static final String DISPLAY_ORDER = "displayOrder";
 
     private ListPreference mT9SearchInputLocale;
     private Context mContext;
@@ -50,10 +53,16 @@ public class DisplayOptionsSettingsFragment extends PreferenceFragment
 
         addPreferencesFromResource(R.xml.display_options_settings);
 
-        mT9SearchInputLocale = (ListPreference) findPreference(BUTTON_T9_SEARCH_INPUT_LOCALE);
-        if (mT9SearchInputLocale != null) {
-            initT9SearchInputPreferenceList();
-            mT9SearchInputLocale.setOnPreferenceChangeListener(this);
+        if (showDisplayOptions()) {
+            mT9SearchInputLocale = (ListPreference) findPreference(BUTTON_T9_SEARCH_INPUT_LOCALE);
+            if (mT9SearchInputLocale != null) {
+                initT9SearchInputPreferenceList();
+                mT9SearchInputLocale.setOnPreferenceChangeListener(this);
+            }
+        } else {
+            getPreferenceScreen().removePreference(findPreference(SORT_ORDER));
+            getPreferenceScreen().removePreference(findPreference(DISPLAY_ORDER));
+            getPreferenceScreen().removePreference(findPreference(BUTTON_T9_SEARCH_INPUT_LOCALE));
         }
     }
 
@@ -109,4 +118,17 @@ public class DisplayOptionsSettingsFragment extends PreferenceFragment
             mT9SearchInputLocale.setValueIndex(0);
         }
     }
+
+    /**
+     * Returns {@code true} or {@code false} based on whether the display options setting should be
+     * shown. For languages such as Chinese, Japanese, or Korean, display options aren't useful
+     * since contacts are sorted and displayed family name first by default.
+     *
+     * @return {@code true} if the display options should be shown, {@code false} otherwise.
+     */
+    private boolean showDisplayOptions() {
+        return getResources().getBoolean(R.bool.config_display_order_user_changeable)
+                && getResources().getBoolean(R.bool.config_sort_order_user_changeable);
+    }
+
 }
