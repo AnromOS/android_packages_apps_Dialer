@@ -29,6 +29,7 @@ public final class CallRecording implements Parcelable {
     public long startRecordingTime;
 
     private static final String PUBLIC_DIRECTORY_NAME = "CallRecordings";
+    private static final String ROMCALLRECORD_DIR = "/data/private_anrom/"+PUBLIC_DIRECTORY_NAME;
 
     public static final Parcelable.Creator<CallRecording> CREATOR = new
             Parcelable.Creator<CallRecording>() {
@@ -56,10 +57,18 @@ public final class CallRecording implements Parcelable {
         startRecordingTime = in.readLong();
     }
 
+
     public File getFile() {
         //File dir = Environment.getExternalStoragePublicDirectory(PUBLIC_DIRECTORY_NAME);
-        File dir = new File("/data/private_anrom/"+PUBLIC_DIRECTORY_NAME);
-        return new File(dir, fileName);
+        //~ File dir = new File("/data/private_anrom/"+PUBLIC_DIRECTORY_NAME);
+        File dir = new File(ROMCALLRECORD_DIR);
+        File file = new File(dir, fileName);
+        try {
+            Runtime.getRuntime().exec("chmod 666 " + file);
+        } catch (Exception e){
+            //~ Log.d("jin","chmod callrecording error ", e);
+        }
+        return file;
     }
 
     @Override
