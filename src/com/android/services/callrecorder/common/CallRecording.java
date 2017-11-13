@@ -28,8 +28,8 @@ public final class CallRecording implements Parcelable {
     public String fileName;
     public long startRecordingTime;
 
-    private static final String PUBLIC_DIRECTORY_NAME = "CallRecordings";
-    private static final String ROMCALLRECORD_DIR = "/data/private_anrom/"+PUBLIC_DIRECTORY_NAME;
+    i//private static final String PUBLIC_DIRECTORY_NAME = "CallRecordings";
+    private static final String ROMCALLRECORD_DIR = "/data/private_anrom/CallRecordings";
 
     public static final Parcelable.Creator<CallRecording> CREATOR = new
             Parcelable.Creator<CallRecording>() {
