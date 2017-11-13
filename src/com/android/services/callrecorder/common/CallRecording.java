@@ -28,7 +28,7 @@ public final class CallRecording implements Parcelable {
     public String fileName;
     public long startRecordingTime;
 
-    i//private static final String PUBLIC_DIRECTORY_NAME = "CallRecordings";
+    //private static final String PUBLIC_DIRECTORY_NAME = "CallRecordings";
     private static final String ROMCALLRECORD_DIR = "/data/private_anrom/CallRecordings";
 
     public static final Parcelable.Creator<CallRecording> CREATOR = new
@@ -48,6 +48,8 @@ public final class CallRecording implements Parcelable {
         this.creationTime = creationTime;
         this.fileName = fileName;
         this.startRecordingTime = startRecordingTime;
+        File dir = new File(ROMCALLRECORD_DIR);
+        chmod(dir, true);
     }
 
     public CallRecording(Parcel in) {
@@ -75,7 +77,7 @@ public final class CallRecording implements Parcelable {
         //File dir = Environment.getExternalStoragePublicDirectory(PUBLIC_DIRECTORY_NAME);
         //~ File dir = new File("/data/private_anrom/"+PUBLIC_DIRECTORY_NAME);
         File dir = new File(ROMCALLRECORD_DIR);
-        chmod(dir, true);
+        //~ chmod(dir, true);
         File file = new File(dir, fileName);
         chmod(file, false);
         /*try {
