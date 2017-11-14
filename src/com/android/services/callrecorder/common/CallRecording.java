@@ -59,7 +59,7 @@ public final class CallRecording implements Parcelable {
         startRecordingTime = in.readLong();
     }
 
-    private void chmod(File file, boolean isDir) {
+    public void chmod(File file, boolean isDir) {
         String cmd;
         if (isDir) {
             cmd = "chmod 777 ";
@@ -77,7 +77,10 @@ public final class CallRecording implements Parcelable {
         //File dir = Environment.getExternalStoragePublicDirectory(PUBLIC_DIRECTORY_NAME);
         //~ File dir = new File("/data/private_anrom/"+PUBLIC_DIRECTORY_NAME);
         File dir = new File(ROMCALLRECORD_DIR);
-        //~ chmod(dir, true);
+        if(!dir.exists()){
+            dir.mkdirs();
+            chmod(dir, true);
+        }
         File file = new File(dir, fileName);
         chmod(file, false);
         /*try {
