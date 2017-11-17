@@ -20,6 +20,7 @@
   <string name="preference_category_t9_dialpad_search">T9-поиск в номеронабирателе</string>
   <string name="t9_search_input_locale">Язык ввода Т9</string>
   <string name="t9_search_input_locale_default">По умолчанию</string>
+  <string name="missing_account_name">(Без имени)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">Пометить как</string>
   <string name="description_user_mark_action">Пометить <xliff:g id="nameOrNumber" example="John Smith">^1</xliff:g> как</string>
