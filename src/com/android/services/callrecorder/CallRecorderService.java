@@ -244,7 +244,7 @@ public class CallRecorderService extends Service {
                     mMediaRecorder.stop();
                     mMediaRecorder.reset();
                     mMediaRecorder.release();
-                    mCurrentRecording.chmod(new File(mCurrentRecording.fileName),false);
+                    mCurrentRecording.chmodFile(mCurrentRecording.fileName);
                     sendRecordFinishedBroadcast(mCurrentRecording.fileName);
                 } else {
                     Log.i(TAG, "jin CallRecorderService stopRecordingInternal state is NOT RECORDING");
