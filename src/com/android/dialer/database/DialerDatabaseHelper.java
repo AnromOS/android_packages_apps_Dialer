@@ -49,7 +49,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -71,6 +70,10 @@ public class DialerDatabaseHelper extends SQLiteOpenHelper {
     private static final Object mLock = new Object();
     private static final AtomicBoolean sInUpdate = new AtomicBoolean(false);
     private final Context mContext;
+
+    private Class mMultiMatchClass;
+    private Object mMultiMatchObject;
+    private Method mMultiMatchMethod;
 
     /**
      * SmartDial DB version ranges:
@@ -382,6 +385,33 @@ public class DialerDatabaseHelper extends SQLiteOpenHelper {
     protected DialerDatabaseHelper(Context context, String databaseName, int dbVersion) {
         super(context, databaseName, null, dbVersion);
         mContext = Preconditions.checkNotNull(context, "Context must not be null");
+    }
+
+    private void initMultiLanguageSearch() {
+        try {
+            if (mMultiMatchClass == null) {
+                mMultiMatchClass = Class
+                        .forName("com.qualcomm.qti.smartsearch.SmartMatch");
+                Log.d(TAG, "create multi match success");
+            }
+            if (mMultiMatchObject == null && mMultiMatchClass != null) {
+                mMultiMatchObject = mMultiMatchClass.newInstance();
+            }
+            if (mMultiMatchMethod == null && mMultiMatchClass != null) {
+                mMultiMatchMethod = mMultiMatchClass.getDeclaredMethod(
+                        "getMatchStringIndex", String.class, String.class,
+                        int.class);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public Object getMultiMatchObject() {
+        return mMultiMatchObject;
+    }
+
+    public Method getMultiMatchMethod() {
+        return mMultiMatchMethod;
     }
 
     /**

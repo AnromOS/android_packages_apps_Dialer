@@ -20,8 +20,6 @@
   <string name="preference_category_t9_dialpad_search">Številčnica, iskanje T9</string>
   <string name="t9_search_input_locale">Iskalni vnos T9</string>
   <string name="t9_search_input_locale_default">Privzeto</string>
-  <string name="missing_account_type">(Brez tipa)</string>
-  <string name="missing_account_name">(Brez imena)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">Označi kot</string>
   <string name="description_user_mark_action">Označi <xliff:g id="nameOrNumber" example="John Smith"> ^ 1 </xliff:g> kot</string>

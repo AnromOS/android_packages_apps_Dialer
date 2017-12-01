@@ -17,6 +17,7 @@
 package com.android.dialer.dialpad;
 
 import android.support.annotation.Nullable;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -66,9 +67,14 @@ public class SmartDialNameMatcher {
         this(query, SmartDialPrefix.getMap(), context);
     }
 
-    public SmartDialNameMatcher(String query, SmartDialMap map) {
+    public SmartDialNameMatcher(String query, SmartDialMap map, Context context) {
         mQuery = query;
         mMap = map;
+        mContext = context;
+        mMultiMatchObject = DialerDatabaseHelper.getInstance(mContext)
+                .getMultiMatchObject();
+        mMultiMatchMethod = DialerDatabaseHelper.getInstance(mContext)
+                .getMultiMatchMethod();
     }
 
     /**
@@ -438,5 +444,46 @@ public class SmartDialNameMatcher {
 
     public String getQuery() {
         return mQuery;
+    }
+
+    boolean matchesMultiLanguage(String displayName, String query,
+            ArrayList<SmartDialMatchPosition> matchList) {
+        StringBuilder builder = new StringBuilder();
+        constructEmptyMask(builder, displayName.length());
+        mNameMatchMask = builder.toString();
+        final int nameLength = displayName.length();
+        final int queryLength = query.length();
+
+        if (queryLength == 0) {
+            return false;
+        }
+        // contains the start, not the end poing
+        try {
+            int[] indexs = (int[]) mMultiMatchMethod.invoke(mMultiMatchObject,
+                    query, displayName, 0);
+            // mMultimatch.getMatchStringIndex(query, displayName, 0);
+            if (indexs == null) {
+                return false;
+            }
+            for (int i = 0; i < indexs.length; i = i + 2) {
+                int start = indexs[i];
+                int end = indexs[i + 1];
+                if (start >= 0 && end >= 0) {
+                    matchList.add(new SmartDialMatchPosition(start, end + 1));
+                } else {
+                    Log.d(TAG, "Invalid index, start is:" + start + " end is:"
+                            + end + " for name:" + displayName);
+                }
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Exception:" + e);
+            return false;
+        }
+
+        for (SmartDialMatchPosition match : matchList) {
+            replaceBitInMask(builder, match);
+        }
+        mNameMatchMask = builder.toString();
+        return true;
     }
 }

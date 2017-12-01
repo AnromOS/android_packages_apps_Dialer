@@ -20,8 +20,6 @@
   <string name="preference_category_t9_dialpad_search">T9 пошук у нумаранабіральніку</string>
   <string name="t9_search_input_locale">Увядзенне пошуку T9</string>
   <string name="t9_search_input_locale_default">Па змаўчанні</string>
-  <string name="missing_account_type">(Няма тыпу)</string>
-  <string name="missing_account_name">(Няма імя)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">ПАЗНАЧЫЦЬ</string>
   <string name="description_user_mark_action">Пазнычыць <xliff:g id="nameOrNumber" example="John Smith">^1</xliff:g> як</string>

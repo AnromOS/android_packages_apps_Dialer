@@ -20,8 +20,6 @@
   <string name="preference_category_t9_dialpad_search">Pencarian dialpad T9</string>
   <string name="t9_search_input_locale">Masukan pencarian T9</string>
   <string name="t9_search_input_locale_default">Bawaan</string>
-  <string name="missing_account_type">(Tidak ada jenis)</string>
-  <string name="missing_account_name">(Tanpa Nama)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">Tandai sebagai</string>
   <string name="description_user_mark_action">Tandai <xliff:g id="nameOrNumber" example="John Smith"> ^ 1 </xliff:g> sebagai</string>

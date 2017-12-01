@@ -20,8 +20,6 @@
   <string name="preference_category_t9_dialpad_search">Vyhledávání T9 na číselníku</string>
   <string name="t9_search_input_locale">Vstup vyhledávání T9</string>
   <string name="t9_search_input_locale_default">Výchozí</string>
-  <string name="missing_account_type">(Žádný typ)</string>
-  <string name="missing_account_name">(Žádné jméno)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">OZNAČIT JAKO</string>
   <string name="description_user_mark_action">Označit <xliff:g id="nameOrNumber" example="John Smith">^1</xliff:g> jako</string>

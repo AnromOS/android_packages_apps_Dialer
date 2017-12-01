@@ -63,7 +63,6 @@ public class DialerSettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     public void onBuildHeaders(List<Header> target) {
-
         Header displayOptionsHeader = new Header();
         displayOptionsHeader.titleRes = R.string.display_options_title;
         displayOptionsHeader.fragment = DisplayOptionsSettingsFragment.class.getName();

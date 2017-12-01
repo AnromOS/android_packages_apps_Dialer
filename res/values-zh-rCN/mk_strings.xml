@@ -20,8 +20,6 @@
   <string name="preference_category_t9_dialpad_search">拨号盘 T9 搜索</string>
   <string name="t9_search_input_locale">T9 搜索输入</string>
   <string name="t9_search_input_locale_default">默认</string>
-  <string name="missing_account_type">（无类型）</string>
-  <string name="missing_account_name">（无姓名）</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">标记号码</string>
   <string name="description_user_mark_action">为 <xliff:g id="nameOrNumber" example="John Smith">^1</xliff:g> 标记</string>

@@ -22,9 +22,6 @@
     <string name="t9_search_input_locale">T9 search input</string>
     <string name="t9_search_input_locale_default">Default</string>
 
-    <string name="missing_account_type">(No type)</string>
-    <string name="missing_account_name">(No name)</string>
-
     <!-- Cloud Phone Number Location Engine -->
     <string name="call_log_action_user_mark">Mark as</string>
     <string name="description_user_mark_action">Mark <xliff:g id="nameOrNumber" example="John Smith">^1</xliff:g> as</string>

@@ -20,8 +20,6 @@
   <string name="preference_category_t9_dialpad_search">Tárcsázó T9 keresés</string>
   <string name="t9_search_input_locale">T9 keresés</string>
   <string name="t9_search_input_locale_default">Alapértelmezés</string>
-  <string name="missing_account_type">(Nincs ilyen)</string>
-  <string name="missing_account_name">(Nincs név)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">Megjelöl mint</string>
   <string name="description_user_mark_action">Megjelöl <xliff:g id="nameOrNumber" example="John Smith"> ^ 1 </xliff:g> mint</string>

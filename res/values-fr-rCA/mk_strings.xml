@@ -20,8 +20,6 @@
   <string name="preference_category_t9_dialpad_search">Recherche clavier T9</string>
   <string name="t9_search_input_locale">Paramètre de recherche T9</string>
   <string name="t9_search_input_locale_default">Défaut</string>
-  <string name="missing_account_type">(aucun type)</string>
-  <string name="missing_account_name">(Sans nom)</string>
   <!-- Cloud Phone Number Location Engine -->
   <string name="call_log_action_user_mark">MARQUER COMME</string>
   <string name="description_user_mark_action">Marquer <xliff:g id="nameOrNumber" example="John Smith">^1</xliff:g> comme</string>
