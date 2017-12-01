@@ -56,11 +56,14 @@ public class SmartDialNameMatcher {
     private String mNameMatchMask = "";
     private String mPhoneNumberMatchMask = "";
 
+    private Context mContext;
     private String mSchar = "+*#-.(,)/ ";
+    private Object mMultiMatchObject;
+    private Method mMultiMatchMethod;
 
     @VisibleForTesting
-    public SmartDialNameMatcher(String query) {
-        this(query, SmartDialPrefix.getMap());
+    public SmartDialNameMatcher(String query, Context context) {
+        this(query, SmartDialPrefix.getMap(), context);
     }
 
     public SmartDialNameMatcher(String query, SmartDialMap map) {
@@ -408,7 +411,11 @@ public class SmartDialNameMatcher {
 
     public boolean matches(String displayName) {
         mMatchPositions.clear();
-        return mMap.matchesCombination(this, displayName, mQuery, mMatchPositions);
+        if (mMultiMatchObject != null && mMultiMatchMethod != null) {
+            return matchesMultiLanguage(displayName, mQuery, mMatchPositions);
+        } else {
+            return mMap.matchesCombination(this, displayName, mQuery, mMatchPositions);
+        }
     }
 
     public ArrayList<SmartDialMatchPosition> getMatchPositions() {
