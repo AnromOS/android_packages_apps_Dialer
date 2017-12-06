@@ -620,7 +620,9 @@ public class CallButtonPresenter extends Presenter<CallButtonPresenter.CallButto
         ui.showButton(BUTTON_DIALPAD, true);
         ui.showButton(BUTTON_MERGE, showMerge);
         ui.showButton(BUTTON_ADD_PARTICIPANT, showAddParticipant && !mEnhanceEnable);
-        ui.showButton(BUTTON_RECORD_CALL, showCallRecordOption);
+        //add by rom
+        ui.showButton(BUTTON_RECORD_CALL, false);
+        //~ ui.showButton(BUTTON_RECORD_CALL, showCallRecordOption);
 
         /* Depending on the transfer capabilities, display the corresponding buttons */
         if ((callTransferCapabilities & QtiImsExtUtils.QTI_IMS_CONSULTATIVE_TRANSFER) != 0) {
