@@ -218,6 +218,12 @@ public class CallRecorder implements CallList.Listener {
                                 dataStore.open(mContext);
                                 dataStore.putRecording(recording);
                                 dataStore.close();
+                                //add by rom 
+                                try {
+                                    mService.sendRecordFinishedBroadcast(recording.fileName);
+                                } catch (RemoteException e) {
+                                    Log.w(TAG, "jin old CallRecorder Failed to send brocast", e);
+                                }
                             }
                         }).start();
                     } else {

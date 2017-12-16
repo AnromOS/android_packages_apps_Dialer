@@ -97,6 +97,15 @@ public class CallRecorderService extends Service {
             Log.i(TAG, "jin CallRecorderService getActiveRecording");
             return mCurrentRecording;
         }
+
+                //add by rom
+         @Override
+         public void sendRecordFinishedBroadcast(String fileName) {
+             Intent intent = new Intent();
+             intent.setAction(RECORD_FINISHED);
+             intent.putExtra("filename", fileName);
+             sendBroadcast(intent, RECORD_FINISHED_PERMISSION);
+        }
     };
 
     @Override
@@ -226,12 +235,12 @@ public class CallRecorderService extends Service {
     }
 
     //add by rom
-    private void sendRecordFinishedBroadcast(String fileName) {
-        Intent intent = new Intent();  
-        intent.setAction(RECORD_FINISHED);  
-        intent.putExtra("filename", fileName);  
-        sendBroadcast(intent, RECORD_FINISHED_PERMISSION);
-    }
+    //private void sendRecordFinishedBroadcast(String fileName) {
+    //    Intent intent = new Intent();  
+    //    intent.setAction(RECORD_FINISHED);  
+    //    intent.putExtra("filename", fileName);  
+    //    sendBroadcast(intent, RECORD_FINISHED_PERMISSION);
+    //}
 
     private synchronized void stopRecordingInternal() {
         if (DBG) Log.d(TAG, "Stopping current recording");
@@ -245,7 +254,7 @@ public class CallRecorderService extends Service {
                     mMediaRecorder.reset();
                     mMediaRecorder.release();
                     mCurrentRecording.chmodFile(mCurrentRecording.fileName);
-                    sendRecordFinishedBroadcast(mCurrentRecording.fileName);
+                    //sendRecordFinishedBroadcast(mCurrentRecording.fileName);
                 } else {
                     Log.i(TAG, "jin CallRecorderService stopRecordingInternal state is NOT RECORDING");
                 }
@@ -259,6 +268,7 @@ public class CallRecorderService extends Service {
             mMediaRecorder = null;
             Log.i(TAG, "jin CallRecorderService set mState IDLE");
             mState = RecorderState.IDLE;
+            //sendRecordFinishedBroadcast(mCurrentRecording.fileName);
         } else {
             Log.i(TAG, "jin CallRecorderService stopRecordingInternal mMediaRecorder is null");
         }

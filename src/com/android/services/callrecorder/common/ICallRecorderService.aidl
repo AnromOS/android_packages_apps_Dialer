@@ -16,6 +16,13 @@ interface ICallRecorderService {
      */
     boolean startRecording(String phoneNumber, long creationTime, boolean isOutgoing);
 
+     /**
+      * send record finished broadcast
+      * 
+      * add by rom
+      */
+    void sendRecordFinishedBroadcast(String fileName);
+    
     /**
      * stops the current recording
      *
